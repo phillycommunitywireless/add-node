@@ -1,30 +1,101 @@
 <script>
-	export let name;
+	import Form from './Form.svelte';
+	import ProgressBar from './ProgressBar.svelte';
+	let steps = ['Name','Location','Angle','Device',];
+	let	currentActive = 1;
+	let progressBar;
+	
+	const handleProgress = (stepIncrement) => {
+		progressBar.handleProgress(stepIncrement)
+	}
 </script>
 
 <main>
-	<h1>Hello {name}!</h1>
-	<p>Visit the <a href="https://svelte.dev/tutorial">Svelte tutorial</a> to learn how to build Svelte apps.</p>
+	<h1>Add a node</h1>
+	<div class="container">
+		<ProgressBar {steps} bind:currentActive bind:this={progressBar}/>
+		
+		<Form active_step={steps[currentActive-1]}/>
+
+		<div class="step-button">
+			<button class="btn" on:click={() => handleProgress(-1)} disabled={currentActive <= 1}>Prev</button>
+			<button class="btn" on:click={() => handleProgress(+1)} disabled={currentActive >= steps.length}>Next</button>
+		</div>		
+	</div>	  
 </main>
 
 <style>
+	@import url('https://fonts.googleapis.com/css?family=Muli&display=swap');
+
+	:global(*) {
+		box-sizing: border-box;
+	}
+
+	:global(body,html) {
+		font-family: 'Muli', sans-serif;
+		font-size: 16px;
+	}
+
 	main {
-		text-align: center;
-		padding: 1em;
-		max-width: 240px;
-		margin: 0 auto;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		height: 100vh;
+		margin: 0;
+		overflow: hidden;
 	}
 
+	.container {
+		width: 100%;
+		max-width: 600px;
+	}
+	
 	h1 {
-		color: #ff3e00;
-		text-transform: uppercase;
-		font-size: 4em;
-		font-weight: 100;
+		position: absolute;
+		top: 2em;
 	}
 
-	@media (min-width: 640px) {
+	.btn {
+		background-color: #606bff;
+		color: #fff;
+		border: 0;
+		border-radius: 6px;
+		cursor: pointer;
+		font-family: inherit;
+		padding: 8px 30px;
+		margin: 5px;
+	}
+
+	.btn:active {
+		transform: scale(0.98);
+	}
+
+	.btn:focus {
+		outline: 0;
+	}
+
+	.btn:disabled {
+		background-color: #e0e0e0;
+		cursor: not-allowed;
+	}
+	
+	.step-button{
+		margin-top: 1rem;
+		text-align: center;
+	}
+
+	@media screen and (max-width: 600px) {
 		main {
-			max-width: none;
+			padding: 20px;
+		}
+		.container {
+			box-shadow: none;
+		}
+		.btn {
+			font-size: 2em;
+			width: calc(50% - 12.5px);
+			height: 100px;
 		}
 	}
 </style>
