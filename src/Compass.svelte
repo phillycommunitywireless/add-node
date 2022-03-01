@@ -44,36 +44,13 @@
       alert("has to be allowed!");
     }
   }
-
-  // let pointDegree;
-  //
-  // function calcDegreeToPoint(latitude, longitude) {
-  //   // Qibla geolocation
-  //   const point = {
-  //     lat: 21.422487,
-  //     lng: 39.826206,
-  //   };
-
-  //   const phiK = (point.lat * Math.PI) / 180.0;
-  //   const lambdaK = (point.lng * Math.PI) / 180.0;
-  //   const phi = (latitude * Math.PI) / 180.0;
-  //   const lambda = (longitude * Math.PI) / 180.0;
-  //   const psi =
-  //     (180.0 / Math.PI) *
-  //     Math.atan2(
-  //       Math.sin(lambdaK - lambda),
-  //       Math.cos(phi) * Math.tan(phiK) -
-  //         Math.sin(phi) * Math.cos(lambdaK - lambda)
-  //     );
-  //   return Math.round(psi);
-  // }
 </script>
 
 <div>
   <p>Tap the compass to choose North.</p>
-  <div class="compass">
+  <div id="compass">
     <div class="arrow" />
-    <div bind:this={compassCircle} class="compass-circle" />
+    <div bind:this={compassCircle} id="compass-circle" />
   </div>
   <p>Degrees: {heading}</p>
   <p>
@@ -85,29 +62,29 @@
 </div>
 
 <style>
-  .compass {
+  #compass {
     position: relative;
-    width: 320px;
-    height: 320px;
+    width: 250px;
+    height: 250px;
     border-radius: 50%;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
     margin: auto;
   }
 
-  .compass > .arrow {
+  #compass .arrow {
     position: absolute;
     width: 0;
     height: 0;
-    top: -20px;
+    top: -10px;
     left: 50%;
     transform: translateX(-50%);
     border-style: solid;
-    border-width: 30px 20px 0 20px;
+    border-width: 15px 8px 0 8px;
     border-color: red transparent transparent transparent;
     z-index: 1;
   }
 
-  .compass > .compass-circle {
+  #compass-circle {
     position: absolute;
     width: 90%;
     height: 90%;

@@ -1,61 +1,78 @@
 <script>
-  import InputField from "./InputField.svelte";
+  import { Form } from "svelte-forms-lib";
+  import * as yup from "yup";
+
   import Compass from "./Compass.svelte";
+  import InputField from "./fields/InputField.svelte";
+  import SelectField from "./fields/SelectField.svelte";
 
-  export let active_step;
+  export let steps, currentActive;
+
+  $: activeStep = steps[currentActive];
+
+  let nodeType, label, lat, long, direction, device, meshedWith;
+
   let formData = {
-    name: "",
-    surname: "",
-    email: "",
-    password: "",
-    address: "",
-    city: "",
-    country: "",
-    postcode: "",
-    account_name: "",
-    card_no: "",
+    nodeType,
+    label,
+    lat,
+    long,
+    direction,
+    device,
   };
 
-  const handleSubmit = () => {
-    console.log("Your form data => ", formData);
+  const formProps = {
+    initialValues: { name: "", email: "" },
+    validationSchema: yup.object().shape({
+      title: yup.string().oneOf(["Mr.", "Mrs.", "Mx."]),
+      name: yup.string().required(),
+      email: yup.string().email().required(),
+    }),
+    onSubmit: (values) => {
+      alert(JSON.stringify(values));
+    },
   };
+
+  let nodeTypes = ["Mesh", "Hub"];
 </script>
 
-<form class="form-container" on:submit={handleSubmit}>
-  {#if active_step == "CompassTest"}
-    <Compass />
-  {:else if active_step == "Info"}
-    <InputField label={"Name"} bind:value={formData.name} />
-    <InputField label={"Surname"} bind:value={formData.surname} />
-    <InputField label={"Email"} bind:value={formData.email} />
-    <InputField
-      type={"password"}
-      label={"Password"}
-      bind:value={formData.password}
-    />
-  {:else if active_step == "Address"}
-    <InputField label={"Address"} bind:value={formData.address} />
-    <InputField label={"City"} bind:value={formData.city} />
-    <InputField label={"Country"} bind:value={formData.country} />
-    <InputField label={"Postcode"} bind:value={formData.postcode} />
-  {:else if active_step == "Payment"}
-    <InputField label={"Account Name"} bind:value={formData.account_name} />
-    <InputField label={"Card No"} bind:value={formData.card_no} />
-  {:else if active_step == "Confirmation"}
-    <div class="message">
-      <h2>Thank you for choosing us</h2>
-      <button class="btn submit">Finish </button>
-    </div>
-  {/if}
-</form>
+<div class="form-container">
+  <Form {...formProps}>
+    {#if activeStep == "Info"}
+      <SelectField label={"Node type"} options={nodeTypes} />
+      <InputField
+        type={"password"}
+        label={"Password"}
+        bind:value={formData.password}
+      />
+    {:else if activeStep == "Location"}
+      <InputField label={"Address"} bind:value={formData.address} />
+      <InputField label={"City"} bind:value={formData.city} />
+      <InputField label={"Country"} bind:value={formData.country} />
+      <InputField label={"Postcode"} bind:value={formData.postcode} />
+    {:else if activeStep == "Direction"}
+      <Compass />
+    {:else if activeStep == "Device"}
+      <InputField label={"Account Name"} bind:value={formData.account_name} />
+      <InputField label={"Card No"} bind:value={formData.card_no} />
+    {:else if activeStep == "Confirmation"}
+      <div class="message">
+        <h2>Thank you for choosing us</h2>
+        <button class="btn submit">Finish </button>
+      </div>
+    {/if}
+  </Form>
+</div>
 
 <style>
   .form-container {
     background-color: #fff;
     border-radius: 10px;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1), 0 6px 6px rgba(0, 0, 0, 0.1);
-    padding: 50px 20px;
     text-align: center;
+    width: 100%;
+    height: 100%;
+    padding: 20px;
     max-width: 100%;
   }
 

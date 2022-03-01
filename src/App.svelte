@@ -1,71 +1,85 @@
 <script>
   import Form from "./Form.svelte";
   import ProgressBar from "./ProgressBar.svelte";
-  let steps = ["CompassTest", "Info", "Location", "Angle", "Device"];
-  let currentActive = 1;
+
+  let steps = ["Info", "Location", "Direction", "Device"];
+  let currentActive = 0;
   let progressBar;
 
-  const handleProgress = (stepIncrement) => {
-    progressBar.handleProgress(stepIncrement);
+  const setActive = (index) => {
+    currentActive = index;
+    if (currentActive >= steps.length) currentActive = steps.length - 1;
+    if (currentActive < 0) currentActive = 0;
   };
 </script>
 
+<header>
+  <h1>Add a node to PCW</h1>
+</header>
 <main>
-  <h1>Add a node</h1>
-  <div class="container">
-    <ProgressBar {steps} bind:currentActive bind:this={progressBar} />
-
-    <Form active_step={steps[currentActive - 1]} />
-
-    <div class="step-buttons">
-      <button
-        class="btn"
-        on:click={() => handleProgress(-1)}
-        disabled={currentActive <= 1}>Prev</button
-      >
-      <button
-        class="btn"
-        on:click={() => handleProgress(+1)}
-        disabled={currentActive >= steps.length}>Next</button
-      >
-    </div>
-  </div>
+  <ProgressBar {steps} bind:currentActive bind:this={progressBar} />
+  <Form {steps} {currentActive} />
 </main>
+<footer>
+  <div class="step-buttons">
+    <button
+      class="btn"
+      on:click={() => setActive(currentActive - 1)}
+      disabled={currentActive <= 0}>Prev</button
+    >
+    <button
+      class="btn"
+      on:click={() => setActive(currentActive + 1)}
+      disabled={currentActive >= steps.length - 1}>Next</button
+    >
+  </div>
+</footer>
 
 <style>
-  @import url("https://fonts.googleapis.com/css?family=Muli&display=swap");
+  @import url("https://fonts.googleapis.com/css2?family=Inconsolata:wght@400;700&display=swap");
 
   :global(*) {
     box-sizing: border-box;
   }
 
   :global(body, html) {
-    font-family: "Muli", sans-serif;
+    font-family: "Inconsolata", "Courier", monospace;
     font-size: 16px;
+    padding: 0;
+    margin: 0;
+  }
+  :global(body) {
+    display: flex;
+    flex-direction: column;
   }
 
   main {
+    flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100vh;
     margin: 0;
     overflow: hidden;
   }
-
-  .container {
-    width: 100%;
-    max-width: 600px;
+  footer {
+    padding: 20px;
   }
 
   h1 {
-    position: absolute;
-    top: 2em;
+    font-size: 1.3em;
+    font-weight: bolder;
+    margin: 0;
+    padding: 8px 0;
+    border-bottom: solid 1px gainsboro;
+    color: rgba(39, 22, 100, 0.5);
+    background: #f2eaff;
+    text-align: center;
   }
 
   .step-buttons {
-    margin-top: 1rem;
+    display: flex;
+    justify-content: space-evenly;
     text-align: center;
   }
 
@@ -75,13 +89,7 @@
     border: 0;
     border-radius: 6px;
     cursor: pointer;
-    font-family: inherit;
     padding: 8px 30px;
-    margin: 5px;
-  }
-
-  .btn:active {
-    transform: scale(0.98);
   }
 
   .btn:focus {
@@ -95,11 +103,13 @@
 
   @media screen and (max-width: 600px) {
     main {
+      justify-content: space-between;
       padding: 20px;
     }
     .container {
       box-shadow: none;
     }
+
     .btn {
       font-size: 2em;
       width: calc(50% - 12.5px);
