@@ -1,6 +1,7 @@
 <script>
   export let value,
     label,
+    emoji,
     type = "text";
 
   function typeAction(node) {
@@ -8,23 +9,25 @@
   }
 </script>
 
-<p class="form-control">
-  {#if label}
-    <label class="label" for>{label}:</label>
+<label class="label" for={label}>
+  {#if emoji}
+    <span aria-hidden>{emoji}</span>
   {/if}
-  <input use:typeAction class="input" bind:value />
-</p>
+  {label}
+</label>
+<input use:typeAction name={label} bind:value />
 
 <style>
-  .form-control {
-    margin: 0.5rem 0;
-    text-align: left;
+  .emoji {
   }
-  .input {
+  label {
+    font-size: 0.9em;
+    color: #888;
+    padding: 5px 0;
+  }
+  input {
     width: 100%;
-    display: block;
     padding: 0.5rem;
-    margin-top: 0.5rem;
     border-width: 1px;
     border-radius: 0.25rem;
   }

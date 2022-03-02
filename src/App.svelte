@@ -16,24 +16,26 @@
 <header>
   <h1>Add a node to PCW</h1>
 </header>
-<main>
-  <ProgressBar {steps} bind:currentActive bind:this={progressBar} />
-  <Form {steps} {currentActive} />
-</main>
-<footer>
-  <div class="step-buttons">
-    <button
-      class="btn"
-      on:click={() => setActive(currentActive - 1)}
-      disabled={currentActive <= 0}>Prev</button
-    >
-    <button
-      class="btn"
-      on:click={() => setActive(currentActive + 1)}
-      disabled={currentActive >= steps.length - 1}>Next</button
-    >
-  </div>
-</footer>
+<div id="app-container">
+  <main>
+    <ProgressBar {steps} bind:currentActive bind:this={progressBar} />
+    <Form {steps} {currentActive} />
+  </main>
+  <footer>
+    <div class="step-buttons">
+      <button
+        class="btn"
+        on:click={() => setActive(currentActive - 1)}
+        disabled={currentActive <= 0}>Prev</button
+      >
+      <button
+        class="btn"
+        on:click={() => setActive(currentActive + 1)}
+        disabled={currentActive >= steps.length - 1}>Next</button
+      >
+    </div>
+  </footer>
+</div>
 
 <style>
   @import url("https://fonts.googleapis.com/css2?family=Inconsolata:wght@400;700&display=swap");
@@ -53,17 +55,28 @@
     flex-direction: column;
   }
 
+  #app-container {
+    max-height: 700px;
+    max-width: 500px;
+    margin: auto;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1), 0 6px 6px rgba(0, 0, 0, 0.1);
+  }
+
   main {
     flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    margin: 0;
+    width: 100%;
+    margin: 0 auto;
+    padding: 10px;
     overflow: hidden;
   }
   footer {
-    padding: 20px;
+    padding: 30px;
   }
 
   h1 {
@@ -79,7 +92,7 @@
 
   .step-buttons {
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-between;
     text-align: center;
   }
 
@@ -102,17 +115,24 @@
   }
 
   @media screen and (max-width: 600px) {
-    main {
-      justify-content: space-between;
-      padding: 20px;
-    }
-    .container {
+    #app-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      max-width: 100vw;
+      max-height: 100vh;
+      margin: 0;
+      padding: 0;
       box-shadow: none;
+    }
+
+    main {
+      padding: 30px;
     }
 
     .btn {
       font-size: 2em;
-      width: calc(50% - 12.5px);
+      width: calc(50% - 40px);
       height: 100px;
     }
   }

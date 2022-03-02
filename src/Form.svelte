@@ -33,22 +33,20 @@
     },
   };
 
-  let nodeTypes = ["Mesh", "Hub"];
+  let nodeTypes = [
+    { name: "Mesh (no router)", value: "mesh" },
+    { name: "Hub (router + radio)", value: "hub" },
+  ];
 </script>
 
 <div class="form-container">
   <Form {...formProps}>
     {#if activeStep == "Info"}
-      <SelectField label={"Node type"} options={nodeTypes} />
-      <InputField
-        type={"password"}
-        label={"Password"}
-        bind:value={formData.password}
-      />
+      <InputField label="Node name" emoji="📛" bind:value={formData.password} />
+      <InputField label="Installer(s)" emoji="👷‍♀️" />
+      <SelectField label="Node type" emoji="📡" options={nodeTypes} />
     {:else if activeStep == "Location"}
-      <InputField label={"Address"} bind:value={formData.address} />
-      <InputField label={"City"} bind:value={formData.city} />
-      <InputField label={"Country"} bind:value={formData.country} />
+      <InputField label={"Address"} emoji="🏠" />
       <InputField label={"Postcode"} bind:value={formData.postcode} />
     {:else if activeStep == "Direction"}
       <Compass />
@@ -66,14 +64,12 @@
 
 <style>
   .form-container {
+    font-size: 1.3em;
     background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1), 0 6px 6px rgba(0, 0, 0, 0.1);
-    text-align: center;
     width: 100%;
     height: 100%;
-    padding: 20px;
     max-width: 100%;
+    margin: 1em 0;
   }
 
   .btn {

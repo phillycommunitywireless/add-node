@@ -46,7 +46,7 @@
   }
 </script>
 
-<div>
+<div class="container">
   <p>Tap the compass to choose North.</p>
   <div id="compass">
     <div class="arrow" />
@@ -68,7 +68,7 @@
     height: 250px;
     border-radius: 50%;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-    margin: auto;
+    margin: 20px auto;
   }
 
   #compass .arrow {
@@ -96,6 +96,9 @@
     background-size: contain;
   }
 
+  p {
+    margin: 0;
+  }
   button {
     margin-bottom: auto;
   }
