@@ -32,11 +32,17 @@
   };
 
   const formProps = {
-    initialValues: { name: "", email: "" },
     validationSchema: yup.object().shape({
-      title: yup.string().oneOf(["Mr.", "Mrs.", "Mx."]),
-      name: yup.string().required(),
-      email: yup.string().email().required(),
+      nodeLabel: yup.string(),
+      nodeType: yup
+        .string()
+        .oneOf([nodeTypes.map((t) => t.value)])
+        .required(),
+      installers: yup.array().of(yup.string().email()).required(),
+      lat: yup.number().moreThan(-90).lessThan(90).required(),
+      long: yup.number().moreThan(-90).lessThan(90).required(),
+      direction: yup.number().moreThan(0).lessThan(360).required(),
+      device: yup.string().required(),
     }),
     onSubmit: (values) => {
       alert(JSON.stringify(values));
