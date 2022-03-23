@@ -31,7 +31,7 @@
     display: flex;
     justify-content: space-between;
     position: relative;
-    margin: 30px auto;
+    margin: 50px auto 10px auto;
     max-width: 100%;
     width: 350px;
   }

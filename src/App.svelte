@@ -4,7 +4,7 @@
 
   let steps = ["Info", "Location", "Direction", "Device"];
   let currentActive = 0;
-  let progressBar;
+  $: lastStep = currentActive == steps.length - 1;
 
   const setActive = (index) => {
     currentActive = index;
@@ -15,67 +15,56 @@
 
 <header>
   <h1>Add a node to PCW</h1>
+  <ProgressBar {steps} bind:currentActive />
 </header>
-<div id="app-container">
-  <main>
-    <ProgressBar {steps} bind:currentActive bind:this={progressBar} />
-    <Form {steps} {currentActive} />
-  </main>
-  <footer>
-    <div class="step-buttons">
-      <button
-        class="btn"
-        on:click={() => setActive(currentActive - 1)}
-        disabled={currentActive <= 0}>Prev</button
-      >
-      <button
-        class="btn"
-        on:click={() => setActive(currentActive + 1)}
-        disabled={currentActive >= steps.length - 1}>Next</button
-      >
-    </div>
-  </footer>
-</div>
+<main>
+  <Form {steps} {currentActive} />
+</main>
+<footer>
+  <div class="step-buttons">
+    <button
+      class="btn"
+      on:click={() => setActive(currentActive - 1)}
+      disabled={currentActive <= 0}>Prev</button
+    >
+    <button
+      class="btn"
+      class:submit={lastStep}
+      on:click={() => setActive(currentActive + 1)}
+      >{lastStep ? "Submit" : "Next"}</button
+    >
+  </div>
+</footer>
 
 <style>
-  @import url("https://fonts.googleapis.com/css2?family=Inconsolata:wght@400;700&display=swap");
+  @import url("https://fonts.googleapis.com/css2?family=Open+Sans&display=swap");
 
   :global(*) {
     box-sizing: border-box;
   }
 
   :global(body, html) {
-    font-family: "Inconsolata", "Courier", monospace;
+    font-family: "Open Sans", "Helvetica", monospace;
     font-size: 16px;
     padding: 0;
     margin: 0;
   }
   :global(body) {
+    max-height: 100vh;
     display: flex;
     flex-direction: column;
-  }
-
-  #app-container {
-    max-height: 700px;
-    max-width: 500px;
-    margin: auto;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1), 0 6px 6px rgba(0, 0, 0, 0.1);
   }
 
   main {
     flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
+    min-width: 500px;
     margin: 0 auto;
     padding: 10px;
-    overflow: hidden;
+    overflow: scroll;
   }
   footer {
+    width: 600px;
+    margin: auto;
     padding: 30px;
   }
 
@@ -93,16 +82,18 @@
   .step-buttons {
     display: flex;
     justify-content: space-between;
-    text-align: center;
+    box-shadow: 10px 0 10 rgba(0, 0, 0, 0.4);
   }
 
   .btn {
+    width: calc(50% - 15px);
     background-color: #606bff;
     color: #fff;
     border: 0;
+    margin: 0;
     border-radius: 6px;
     cursor: pointer;
-    padding: 8px 30px;
+    padding: 30px;
   }
 
   .btn:focus {
@@ -113,27 +104,16 @@
     background-color: #e0e0e0;
     cursor: not-allowed;
   }
-
+  .btn.submit {
+    background-color: #35c135;
+  }
   @media screen and (max-width: 600px) {
-    #app-container {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      max-width: 100vw;
-      max-height: 100vh;
-      margin: 0;
-      padding: 0;
-      box-shadow: none;
-    }
-
     main {
-      padding: 30px;
+      padding: 10px 30px;
+      min-width: 100%;
     }
-
-    .btn {
-      font-size: 2em;
-      width: calc(50% - 40px);
-      height: 100px;
+    footer {
+      width: 100%;
     }
   }
 </style>

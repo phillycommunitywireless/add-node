@@ -1,7 +1,9 @@
 <script>
+  import FieldWrapper from "./FieldWrapper.svelte";
   export let value,
     label,
-    emoji,
+    description,
+    placeholder,
     type = "text";
 
   function typeAction(node) {
@@ -9,22 +11,11 @@
   }
 </script>
 
-<label class="label" for={label}>
-  {#if emoji}
-    <span aria-hidden>{emoji}</span>
-  {/if}
-  {label}
-</label>
-<input use:typeAction name={label} bind:value />
+<FieldWrapper {label} {description}>
+  <input use:typeAction name={label} bind:value {placeholder} />
+</FieldWrapper>
 
 <style>
-  .emoji {
-  }
-  label {
-    font-size: 0.9em;
-    color: #888;
-    padding: 5px 0;
-  }
   input {
     width: 100%;
     padding: 0.5rem;

@@ -2,23 +2,33 @@
   import { Form } from "svelte-forms-lib";
   import * as yup from "yup";
 
-  import Compass from "./Compass.svelte";
+  import { emailRegex } from "./lib/constants";
+
   import InputField from "./fields/InputField.svelte";
   import SelectField from "./fields/SelectField.svelte";
+  import TagsField from "./fields/TagsField.svelte";
+  import Compass from "./Compass.svelte";
+  import Geolocate from "./Geolocate.svelte";
+
+  // Multi-step form
 
   export let steps, currentActive;
-
   $: activeStep = steps[currentActive];
 
-  let nodeType, label, lat, long, direction, device, meshedWith;
+  // Scrolling
+
+  document.addEventListener("scroll", () => {});
+
+  // Form validation
 
   let formData = {
-    nodeType,
-    label,
-    lat,
-    long,
-    direction,
-    device,
+    nodeLabel: "",
+    nodeType: "",
+    installers: [],
+    lat: 0,
+    long: 0,
+    direction: 0,
+    device: "",
   };
 
   const formProps = {
@@ -33,21 +43,48 @@
     },
   };
 
+  // Inputs
+
   let nodeTypes = [
-    { name: "Mesh (no router)", value: "mesh" },
-    { name: "Hub (router + radio)", value: "hub" },
+    { value: "mesh", label: "Mesh (no router)" },
+    { value: "hub", label: "Hub (router + radio)" },
   ];
+
+  const handleTags = (e) => {
+    for (let text of e.detail.tags) {
+      if (!emailRegex.test(text)) {
+        e.detail.tags.pop(e.detail.tags.indexOf(text));
+      }
+    }
+    formData.installers = e.detail.tags;
+  };
 </script>
 
 <div class="form-container">
   <Form {...formProps}>
     {#if activeStep == "Info"}
-      <InputField label="Node name" emoji="📛" bind:value={formData.password} />
-      <InputField label="Installer(s)" emoji="👷‍♀️" />
-      <SelectField label="Node type" emoji="📡" options={nodeTypes} />
+      <InputField
+        label="Node name"
+        bind:value={formData.password}
+        placeholder="e.g. Kensington Library South"
+      />
+      <SelectField label="Node type" items={nodeTypes} />
+      <TagsField
+        label="Installer(s)"
+        description={`Installers will be sent an optional form to add notes 
+        and reflections on the installation.`}
+        on:tags={handleTags}
+        props={{
+          allowPaste: true,
+          splitWith: "\n",
+          addKeys: [32, 13, 9, 188],
+          onlyUnique: true,
+          placeholder: "Enter installer email(s)...",
+        }}
+      />
+      <p />
     {:else if activeStep == "Location"}
-      <InputField label={"Address"} emoji="🏠" />
-      <InputField label={"Postcode"} bind:value={formData.postcode} />
+      <Geolocate />
     {:else if activeStep == "Direction"}
       <Compass />
     {:else if activeStep == "Device"}
@@ -64,12 +101,15 @@
 
 <style>
   .form-container {
-    font-size: 1.3em;
-    background-color: #fff;
+    font-size: 1.1em;
+    margin-bottom: 20px;
     width: 100%;
-    height: 100%;
     max-width: 100%;
-    margin: 1em 0;
+  }
+
+  p {
+    font-size: 1rem;
+    color: grey;
   }
 
   .btn {
