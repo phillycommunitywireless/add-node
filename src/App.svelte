@@ -2,7 +2,7 @@
   import Form from "./Form.svelte";
   import ProgressBar from "./ProgressBar.svelte";
 
-  let steps = ["Info", "Location", "Direction", "Device"];
+  let steps = ["Info", "Location", "Direction", "Review"];
   let currentActive = 0;
   $: lastStep = currentActive == steps.length - 1;
 
@@ -93,7 +93,7 @@
     margin: 0;
     border-radius: 6px;
     cursor: pointer;
-    padding: 30px;
+    padding: 20px;
   }
 
   .btn:focus {

@@ -1,34 +1,30 @@
 <script>
   import { onMount } from "svelte";
 
+  export let angle;
+
+  let heading;
+  // Normalize to degrees counter-clockwise from East;
+  $: angle = -heading + (heading > 90 ? 450 : 90);
+
   let isIOS,
-    compassCircle,
-    heading,
-    position,
     offset = 0,
     dev = process.env.NODE_ENV == "dev"; // handled by rollup-plugin-replace
 
   const deviceOrientationEvent = `deviceorientation${dev ? "" : "absolute"}`;
 
   onMount(() => {
-    isIOS = !!(
+    isIOS =
       navigator.userAgent.match(/(iPod|iPhone|iPad)/) &&
-      navigator.userAgent.match(/AppleWebKit/)
-    );
+      navigator.userAgent.match(/AppleWebKit/);
 
     if (!isIOS) {
       window.addEventListener(deviceOrientationEvent, (e) => {
         heading = Math.floor(
           e.webkitCompassHeading ?? Math.abs(e.alpha - 360) - offset
         );
-        compassCircle.style.transform = `translate(-50%, -50%) rotate(${-heading}deg)`;
       });
     }
-
-    navigator.geolocation.getCurrentPosition(
-      (p) => (position = p),
-      console.error
-    );
   });
 
   async function startCompassIOS() {
@@ -46,29 +42,25 @@
   }
 </script>
 
-<div class="container">
-  <p>Tap the compass to choose North.</p>
-  <div id="compass">
-    <div class="arrow" />
-    <div bind:this={compassCircle} id="compass-circle" />
-  </div>
-  <p>Degrees: {heading}</p>
-  <p>
-    Lat/long: {position?.coords?.latitude}, {position?.coords?.longitude}
-  </p>
-  {#if isIOS}
-    <button on:click|preventDefault={startCompassIOS}> Start compass </button>
-  {/if}
+<div id="compass">
+  <div class="arrow" />
+  <div
+    id="compass-circle"
+    style={`transform: translate(-50%, -50%) rotate(${-heading}deg);`}
+  />
 </div>
+{#if isIOS}
+  <button on:click|preventDefault={startCompassIOS}> Start compass </button>
+{/if}
 
 <style>
   #compass {
     position: relative;
-    width: 250px;
-    height: 250px;
+    width: 100%;
+    padding: 100%;
+    height: 0;
     border-radius: 50%;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-    margin: 20px auto;
   }
 
   #compass .arrow {
@@ -91,7 +83,6 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    /* transition: transform 0.1s ease-out; */
     background: url(/img/compass.png) center no-repeat;
     background-size: contain;
   }

@@ -1,8 +1,24 @@
 <script>
   import InputField from "./fields/InputField.svelte";
 
-  let button,
-    showButton = true;
+  export let lat, long;
+
+  let buttonText = "Detect location",
+    state;
+
+  $: success = state == "success";
+  $: error = state == "error";
+  $: switch (state) {
+    case "loading":
+      buttonText = "Loading...";
+      break;
+    case "success":
+      buttonText = "Success!";
+      break;
+    case "error":
+      buttonText = "Error. Enter position manually.";
+      break;
+  }
 
   const getPosition = () => {
     return new Promise((resolve, reject) => {
@@ -16,41 +32,60 @@
     });
   };
 
-  let lat, long;
   const handleClick = async () => {
-    button.textContent = "Locating...";
+    state = "loading";
     try {
       const { coords } = await getPosition();
       [lat, long] = [coords.latitude, coords.longitude];
-      button.textContent = "Success!";
-      button.style.color = "green";
-      setTimeout(() => (showButton = false), 2000);
+      state = "success";
     } catch (err) {
-      console.error(err);
-      button.textContent = err;
-      button.style.color = "red";
+      state = "error";
     }
   };
 </script>
 
 <div>
-  <InputField label="Latitude" bind:value={lat} />
-  <InputField label="Longitude" bind:value={long} />
+  <InputField
+    label="Latitude"
+    type="number"
+    bind:value={lat}
+    inputAttrs={{ disabled: success, step: "any" }}
+  />
+  <InputField
+    label="Longitude"
+    type="number"
+    bind:value={long}
+    inputAttrs={{ disabled: success, step: "any" }}
+  />
 </div>
-{#if showButton}
-  <button bind:this={button} on:click={handleClick} name="geolocation">
-    Detect location
-  </button>
-{/if}
+<button
+  on:click={handleClick}
+  class:success
+  class:error
+  disabled={success || error}
+  name="geolocation"
+>
+  {buttonText}
+</button>
 
 <style>
   div {
     display: flex;
   }
+  /* Space between inputs */
   div > :global(div:first-of-type) {
     margin-right: 20px;
   }
+  p {
+    color: red;
+  }
   button {
     margin: 10px 0;
+  }
+  button.success {
+    color: green;
+  }
+  button.error {
+    color: red;
   }
 </style>

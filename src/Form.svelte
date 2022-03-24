@@ -2,67 +2,27 @@
   import { Form } from "svelte-forms-lib";
   import * as yup from "yup";
 
-  import { emailRegex } from "./lib/constants";
-
   import InputField from "./fields/InputField.svelte";
   import SelectField from "./fields/SelectField.svelte";
   import TagsField from "./fields/TagsField.svelte";
-  import Compass from "./Compass.svelte";
+  import Direction from "./Direction.svelte";
   import Geolocate from "./Geolocate.svelte";
+  import Review from "./Review.svelte";
+
+  import { nodeTypes, formData, formShape } from "./lib/constants";
 
   // Multi-step form
 
   export let steps, currentActive;
   $: activeStep = steps[currentActive];
 
-  // Scrolling
-
-  document.addEventListener("scroll", () => {});
-
-  // Form validation
-
-  let formData = {
-    nodeLabel: "",
-    nodeType: "",
-    installers: [],
-    lat: 0,
-    long: 0,
-    direction: 0,
-    device: "",
-  };
+  // Form data
 
   const formProps = {
-    validationSchema: yup.object().shape({
-      nodeLabel: yup.string(),
-      nodeType: yup
-        .string()
-        .oneOf([nodeTypes.map((t) => t.value)])
-        .required(),
-      installers: yup.array().of(yup.string().email()).required(),
-      lat: yup.number().moreThan(-90).lessThan(90).required(),
-      long: yup.number().moreThan(-90).lessThan(90).required(),
-      direction: yup.number().moreThan(0).lessThan(360).required(),
-      device: yup.string().required(),
-    }),
+    validationSchema: yup.object().shape(formShape),
     onSubmit: (values) => {
       alert(JSON.stringify(values));
     },
-  };
-
-  // Inputs
-
-  let nodeTypes = [
-    { value: "mesh", label: "Mesh (no router)" },
-    { value: "hub", label: "Hub (router + radio)" },
-  ];
-
-  const handleTags = (e) => {
-    for (let text of e.detail.tags) {
-      if (!emailRegex.test(text)) {
-        e.detail.tags.pop(e.detail.tags.indexOf(text));
-      }
-    }
-    formData.installers = e.detail.tags;
   };
 </script>
 
@@ -72,14 +32,16 @@
       <InputField
         label="Node name"
         bind:value={formData.password}
-        placeholder="e.g. Kensington Library South"
+        inputAttrs={{
+          placeholder: "e.g. Kensington Library South",
+        }}
       />
       <SelectField label="Node type" items={nodeTypes} />
       <TagsField
         label="Installer(s)"
         description={`Installers will be sent an optional form to add notes 
         and reflections on the installation.`}
-        on:tags={handleTags}
+        bind:values={formData.installers}
         props={{
           allowPaste: true,
           splitWith: "\n",
@@ -88,19 +50,17 @@
           placeholder: "Enter installer email(s)...",
         }}
       />
-      <p />
+      <InputField
+        label="Device"
+        bind:value={formData.device}
+        inputAttrs={{ placeholder: "e.g. UAP-AC-M" }}
+      />
     {:else if activeStep == "Location"}
-      <Geolocate />
+      <Geolocate bind:lat={formData.lat} bind:long={formData.long} />
     {:else if activeStep == "Direction"}
-      <Compass />
-    {:else if activeStep == "Device"}
-      <InputField label={"Account Name"} bind:value={formData.account_name} />
-      <InputField label={"Card No"} bind:value={formData.card_no} />
-    {:else if activeStep == "Confirmation"}
-      <div class="message">
-        <h2>Thank you for choosing us</h2>
-        <button class="btn submit">Finish </button>
-      </div>
+      <Direction bind:angle={formData.angle} />
+    {:else if activeStep == "Review"}
+      <Review {formData} />
     {/if}
   </Form>
 </div>

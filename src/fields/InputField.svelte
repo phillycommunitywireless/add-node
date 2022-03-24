@@ -3,7 +3,7 @@
   export let value,
     label,
     description,
-    placeholder,
+    inputAttrs,
     type = "text";
 
   function typeAction(node) {
@@ -12,7 +12,7 @@
 </script>
 
 <FieldWrapper {label} {description}>
-  <input use:typeAction name={label} bind:value {placeholder} />
+  <input use:typeAction name={label} bind:value {...inputAttrs} />
 </FieldWrapper>
 
 <style>
@@ -21,5 +21,8 @@
     padding: 0.5rem;
     border-width: 1px;
     border-radius: 0.25rem;
+  }
+  input:disabled {
+    color: #666;
   }
 </style>

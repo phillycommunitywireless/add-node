@@ -2,12 +2,21 @@
   import FieldWrapper from "./FieldWrapper.svelte";
   import Tags from "svelte-tags-input";
 
-  export let label, description, props;
+  export let values, label, description, props;
+
+  const handleTags = (e) => {
+    for (let text of e.detail.tags) {
+      if (!emailRegex.test(text)) {
+        e.detail.tags.pop(e.detail.tags.indexOf(text));
+      }
+    }
+    values = e.detail.tags;
+  };
 </script>
 
 <div class="tags-container">
   <FieldWrapper {label} {description}>
-    <Tags id={label} on:tags {...props} />
+    <Tags id={label} on:tags={handleTags} {...props} />
   </FieldWrapper>
 </div>
 
