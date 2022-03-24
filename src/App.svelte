@@ -27,6 +27,7 @@
       on:click={() => setActive(currentActive - 1)}
       disabled={currentActive <= 0}>Prev</button
     >
+    <!-- TODO wire this button up to the form -->
     <button
       class="btn"
       class:submit={lastStep}
