@@ -42,7 +42,6 @@
     transform: translateY(-50%);
     height: 4px;
     width: 100%;
-    z-index: -1;
   }
 
   .progress {
@@ -53,7 +52,6 @@
     transform: translateY(-50%);
     height: 4px;
     width: 0%;
-    z-index: -1;
     transition: 0.4s ease;
   }
 
@@ -69,6 +67,7 @@
     border: 3px solid #e0e0e0;
     transition: 0.4s ease;
     cursor: pointer;
+    z-index: 2;
   }
 
   .circle::after {

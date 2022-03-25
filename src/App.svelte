@@ -62,6 +62,9 @@
     box-sizing: border-box;
   }
 
+  :global(html) {
+    background-color: black;
+  }
   :global(body, html) {
     font-family: "Open Sans", "Helvetica", monospace;
     font-size: 16px;
@@ -70,20 +73,22 @@
   }
   :global(body) {
     max-height: 100vh;
+    max-width: 600px;
+    margin: auto;
     display: flex;
     flex-direction: column;
+    background-color: white;
   }
 
   main {
     flex: 1;
-    min-width: 500px;
     max-width: 100%;
     margin: 0 auto;
-    padding: 10px;
+    padding: 10px 30px;
     overflow: scroll;
   }
   footer {
-    width: 600px;
+    width: 100%;
     margin: auto;
     padding: 15px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
@@ -132,14 +137,5 @@
   }
   .btn.error {
     background-color: red;
-  }
-  @media screen and (max-width: 600px) {
-    main {
-      padding: 10px 30px;
-      min-width: 100%;
-    }
-    footer {
-      width: 100%;
-    }
   }
 </style>
