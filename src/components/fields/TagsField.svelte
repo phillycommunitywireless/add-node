@@ -1,22 +1,26 @@
 <script>
+  import * as yup from "yup";
   import FieldWrapper from "./FieldWrapper.svelte";
   import Tags from "svelte-tags-input";
+  import { validateField } from "../../lib/store"
 
-  export let values, label, description, props;
+  export let values, name, description, props;
 
   const handleTags = (e) => {
     for (let text of e.detail.tags) {
-      if (!emailRegex.test(text)) {
+      const isEmail = yup.string().email().isValidSync(text);
+      if (!isEmail) {
         e.detail.tags.pop(e.detail.tags.indexOf(text));
       }
     }
     values = e.detail.tags;
+    validateField(name);
   };
 </script>
 
 <div class="tags-container">
-  <FieldWrapper {label} {description}>
-    <Tags id={label} on:tags={handleTags} {...props} />
+  <FieldWrapper {name} {description}>
+    <Tags tags={values} {name} on:tags={handleTags} {...props} />
   </FieldWrapper>
 </div>
 

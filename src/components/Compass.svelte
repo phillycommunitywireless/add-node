@@ -50,7 +50,9 @@
   />
 </div>
 {#if isIOS}
-  <button on:click|preventDefault={startCompassIOS}> Start compass </button>
+  <button type="button" on:click|preventDefault={startCompassIOS}>
+    Start compass
+  </button>
 {/if}
 
 <style>

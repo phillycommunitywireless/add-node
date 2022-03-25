@@ -1,24 +1,21 @@
 <script>
-  export let steps = [],
-    currentActive = 1;
-
-  $: numSteps = steps.length;
+  import { steps, currentActive } from "../lib/store";
 </script>
 
 <div class="progress-container">
   <div
     class="progress"
     style={`
-			width: ${(100 / (numSteps - 1)) * currentActive}%;
+			width: ${(100 / (steps.length - 1)) * $currentActive}%;
 		`}
   />
   {#each steps as step, i}
     <div
       on:click={() => {
-        currentActive = i;
+        currentActive.set(i);
       }}
       class="circle"
-      class:active={currentActive >= i}
+      class:active={$currentActive >= i}
       data-title={step}
     >
       {i + 1}

@@ -1,14 +1,14 @@
 <script>
   import FieldWrapper from "./FieldWrapper.svelte";
-  export let value,
-    label,
+  import { handleChange } from "../../lib/store";
+  export let name,
+    value,
     description,
-    items = [],
-    required = true;
+    items = [];
 </script>
 
-<FieldWrapper {label} {description}>
-  <select id={label} name={label} bind:value {required}>
+<FieldWrapper {name} {description}>
+  <select id={name} {name} bind:value on:change={handleChange}>
     {#each items as item}
       <option value={item.value}>{item.label}</option>
     {/each}

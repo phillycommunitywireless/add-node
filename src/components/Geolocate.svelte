@@ -46,24 +46,32 @@
 
 <div>
   <InputField
-    label="Latitude"
+    name="lat"
     type="number"
     bind:value={lat}
-    inputAttrs={{ disabled: success, step: "any" }}
+    inputAttrs={{ disabled: success }}
   />
   <InputField
-    label="Longitude"
+    name="long"
     type="number"
     bind:value={long}
-    inputAttrs={{ disabled: success, step: "any" }}
+    inputAttrs={{ disabled: success }}
   />
 </div>
+{#if !success}
+  <p>
+    Tap here to use your device's GPS to auto-detect your current position. Not
+    all devices are supported. If yours isn't, just input manual values via a
+    mapping tool of your choice.
+  </p>
+{/if}
 <button
+  type="button"
+  name="geolocation"
   on:click={handleClick}
   class:success
   class:error
   disabled={success || error}
-  name="geolocation"
 >
   {buttonText}
 </button>
@@ -77,7 +85,8 @@
     margin-right: 20px;
   }
   p {
-    color: red;
+    font-size: 0.9em;
+    margin: 1em 0;
   }
   button {
     margin: 10px 0;

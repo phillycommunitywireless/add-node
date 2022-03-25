@@ -26,7 +26,7 @@
     "surge": "^0.23.1",
     "svelte-forms-lib": "^2.0.1",
     "svelte-select": "^4.4.7",
-    "svelte-tags-input": "^2.9.0",
+    "svelte-tags-input": "github:addiebarron/svelte-tags-input",
     "yup": "^0.32.11"
   }
 }

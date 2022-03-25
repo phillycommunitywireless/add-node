@@ -1,18 +1,24 @@
 <script>
   import FieldWrapper from "./FieldWrapper.svelte";
+  import { handleChange } from "../../lib/store";
+
   export let value,
-    label,
+    name,
     description,
     inputAttrs,
     type = "text";
 
-  function typeAction(node) {
-    node.type = type;
-  }
+  const typeAction = (node) => (node.type = type);
 </script>
 
-<FieldWrapper {label} {description}>
-  <input use:typeAction name={label} bind:value {...inputAttrs} />
+<FieldWrapper {name} {description}>
+  <input
+    on:change={handleChange}
+    use:typeAction
+    bind:value
+    {name}
+    {...inputAttrs}
+  />
 </FieldWrapper>
 
 <style>

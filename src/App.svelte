@@ -1,38 +1,56 @@
 <script>
-  import Form from "./Form.svelte";
-  import ProgressBar from "./ProgressBar.svelte";
+  import Form from "./components/Form.svelte";
+  import ProgressBar from "./components/ProgressBar.svelte";
 
-  let steps = ["Info", "Location", "Direction", "Review"];
-  let currentActive = 0;
-  $: lastStep = currentActive == steps.length - 1;
+  import { steps, currentActive, isValid } from "./lib/store";
+
+  $: error = !$isValid;
+
+  $: firstPage = $currentActive <= 0;
+  $: lastPage = $currentActive >= steps.length - 1;
 
   const setActive = (index) => {
-    currentActive = index;
-    if (currentActive >= steps.length) currentActive = steps.length - 1;
-    if (currentActive < 0) currentActive = 0;
+    currentActive.update((i) => {
+      if (i >= steps.length) return steps.length - 1;
+      else if (i < 0) return 0;
+      else return index;
+    });
+  };
+  const turnLeft = () => setActive($currentActive - 1);
+  const turnRight = () => setActive($currentActive + 1);
+
+  let formEl;
+  const submitForm = () => {
+    // form.submit() bypasses handlers in Firefox -- dispatchEvent is the workaround
+    const submitEvent = new Event("submit", {
+      bubbles: true,
+      cancelable: true,
+    });
+    formEl.dispatchEvent(submitEvent);
   };
 </script>
 
 <header>
   <h1>Add a node to PCW</h1>
-  <ProgressBar {steps} bind:currentActive />
+  <ProgressBar />
 </header>
 <main>
-  <Form {steps} {currentActive} />
+  <Form bind:formEl />
 </main>
 <footer>
   <div class="step-buttons">
-    <button
-      class="btn"
-      on:click={() => setActive(currentActive - 1)}
-      disabled={currentActive <= 0}>Prev</button
+    <button type="button" class="btn" on:click={turnLeft} disabled={firstPage}
+      >Prev</button
     >
-    <!-- TODO wire this button up to the form -->
     <button
+      type="button"
       class="btn"
-      class:submit={lastStep}
-      on:click={() => setActive(currentActive + 1)}
-      >{lastStep ? "Submit" : "Next"}</button
+      class:submit={lastPage}
+      class:error={lastPage && error}
+      disabled={lastPage && error}
+      on:click={lastPage ? submitForm : turnRight}
+    >
+      {lastPage ? (error ? "Fix errors" : "Submit") : "Next"}</button
     >
   </div>
 </footer>
@@ -59,6 +77,7 @@
   main {
     flex: 1;
     min-width: 500px;
+    max-width: 100%;
     margin: 0 auto;
     padding: 10px;
     overflow: scroll;
@@ -66,7 +85,8 @@
   footer {
     width: 600px;
     margin: auto;
-    padding: 30px;
+    padding: 15px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   }
 
   h1 {
@@ -87,6 +107,7 @@
   }
 
   .btn {
+    font-weight: bolder;
     width: calc(50% - 15px);
     background-color: #606bff;
     color: #fff;
@@ -105,8 +126,12 @@
     background-color: #e0e0e0;
     cursor: not-allowed;
   }
+
   .btn.submit {
     background-color: #35c135;
+  }
+  .btn.error {
+    background-color: red;
   }
   @media screen and (max-width: 600px) {
     main {

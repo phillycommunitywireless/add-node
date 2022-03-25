@@ -4,6 +4,8 @@
 
   export let angle;
 
+  $: angle = isNaN(angle) ? 0 : angle;
+
   let usedCompass = false,
     usingCompass = false;
 
@@ -17,9 +19,14 @@
 </script>
 
 <InputField
-  label="Direction"
+  name="angle"
+  type="number"
   description="A number between 0-360, representing degrees counter-clockwise from East."
   bind:value={angle}
+  inputAttrs={{
+    min: 0,
+    max: 359,
+  }}
 />
 
 <div class="direction-container">
@@ -37,7 +44,7 @@
       <Compass bind:angle />
     </div>
   {:else}
-    <button name="get-direction" on:click={handleClick}>
+    <button type="button" name="get-direction" on:click={handleClick}>
       Use device compass
     </button>
   {/if}
