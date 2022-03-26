@@ -2,7 +2,7 @@ import * as yup from "yup"
 import { createForm } from "svelte-forms-lib";
 import { writable } from "svelte/store";
 
-export const emailRegex = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+export const dev = process.env.NODE_ENV == "dev";
 
 export const steps = ["Info", "Location", "Direction", "Review"];
 export const currentActive = writable(0);

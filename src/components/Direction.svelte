@@ -35,14 +35,13 @@
       {usingCompass
         ? "Tap the compass when facing the correct direction."
         : `Tap here to use your device's compass to auto-detect the facing angle. 
-          Not all devices are supported. If yours isn't, just estimate
-          from a mapping tool or compass of your choice.`}
+          This feature does not work in Firefox. Google Chrome on Android and iOS
+          should work. If you can't get it to work here, just estimate
+          from a mapping/compass app of your choice.`}
     </p>
   {/if}
   {#if usingCompass}
-    <div class="compass-container" on:click={handleStopClick}>
-      <Compass bind:angle />
-    </div>
+    <Compass bind:angle {handleStopClick} />
   {:else}
     <button type="button" name="get-direction" on:click={handleClick}>
       Use device compass
@@ -51,12 +50,6 @@
 </div>
 
 <style>
-  .compass-container {
-    width: 35vw;
-    max-width: 13vh;
-    margin: 1rem auto;
-    transform: translateX(-50%);
-  }
   p {
     font-size: 0.9em;
     margin: 1em 0;
