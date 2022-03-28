@@ -86,7 +86,6 @@
     position: relative;
     width: 50%;
     height: 50vh;
-    min-width: 13vw;
     max-width: 300px;
   }
   div.aspect {
