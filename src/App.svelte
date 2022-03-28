@@ -73,7 +73,7 @@
   }
   :global(body) {
     max-height: 100vh;
-    max-width: 600px;
+    max-width: 500px;
     margin: auto;
     display: flex;
     flex-direction: column;

@@ -32,12 +32,9 @@
 <div class="direction-container">
   {#if !usedCompass || usingCompass}
     <p>
-      {usingCompass
+      {@html usingCompass
         ? "Tap the compass when facing the correct direction."
-        : `Tap here to use your device's compass to auto-detect the facing angle. 
-          This feature does not work in Firefox. Google Chrome on Android and iOS
-          should work. If you can't get it to work here, just estimate
-          from a mapping/compass app of your choice.`}
+        : `Tap here to use your device's compass to auto-detect the facing angle.`}
     </p>
   {/if}
   {#if usingCompass}
@@ -46,6 +43,16 @@
     <button type="button" name="get-direction" on:click={handleClick}>
       Use device compass
     </button>
+  {/if}
+  {#if !usedCompass && !usingCompass}
+    <p>
+      <strong>
+        This feature does not work in Firefox. Google Chrome on Android and iOS
+        should work.
+      </strong>
+      If you can't get it to work here, just estimate from a mapping/compass app
+      of your choice.
+    </p>
   {/if}
 </div>
 
